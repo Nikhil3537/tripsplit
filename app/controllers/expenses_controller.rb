@@ -59,24 +59,6 @@ class ExpensesController < ApplicationController
     redirect_to trip_expenses_path(@trip), notice: "Expense deleted."
   end
 
-  if @trip.ended? || @trip.closed?
-    redirect_to @trip,
-              alert: "This trip has already ended."
-    return
-  end
-
-  if @trip.settlements.pending.none?
-    @trip.update(status: :closed)
-  end
-
-  <% if @trip.active? %>
-    <%= link_to "Add Expense",
-      new_trip_expense_path(@trip),
-      class: "btn btn-success" %>
-  <% end %>
-
-  
-
   private
 
   def set_trip
