@@ -1,0 +1,42 @@
+<h2>Edit Trip</h2>
+
+<%= form_with model: @trip, local: true do |form| %>
+
+  <% if @trip.errors.any? %>
+    <div style="color: red;">
+      <h3><%= pluralize(@trip.errors.count, "error") %> prevented this trip from being saved:</h3>
+      <ul>
+        <% @trip.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :name %><br>
+    <%= form.text_field :name, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :destination %><br>
+    <%= form.text_field :destination, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :start_date %><br>
+    <%= form.date_field :start_date, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :end_date %><br>
+    <%= form.date_field :end_date, class: "form-control" %>
+  </div>
+
+  <%= form.submit "Update Trip", class: "btn btn-primary" %>
+
+<% end %>
+
+<br>
+
+<%= link_to "Back", trips_path, class: "btn btn-secondary" %>

@@ -1,0 +1,51 @@
+<h2>Expense Details</h2>
+
+<div class="card">
+  <div class="card-body">
+
+    <p>
+      <strong>Title:</strong>
+      <%= @expense.title %>
+    </p>
+
+    <p>
+      <strong>Amount:</strong>
+      ₹<%= @expense.amount %>
+    </p>
+
+    <p>
+      <strong>Paid By:</strong>
+      <%= @expense.payer.name %>
+    </p>
+
+    <p>
+      <strong>Category:</strong>
+      <%= @expense.category %>
+    </p>
+
+    <p>
+      <strong>Description:</strong>
+      <%= @expense.description %>
+    </p>
+
+    <p>
+      <strong>Date:</strong>
+      <%= @expense.spent_on %>
+    </p>
+
+    <%= link_to "Edit",
+          edit_trip_expense_path(@trip, @expense),
+          class: "btn btn-warning" %>
+
+    <%= button_to "Delete",
+          trip_expense_path(@trip, @expense),
+          method: :delete,
+          data: { turbo_confirm: "Are you sure?" },
+          class: "btn btn-danger" %>
+
+    <%= link_to "Back",
+          trip_expenses_path(@trip),
+          class: "btn btn-secondary" %>
+
+  </div>
+</div>

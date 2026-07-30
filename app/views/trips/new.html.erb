@@ -1,0 +1,27 @@
+<h2>New Trip</h2>
+
+<%= form_with model: @trip do |form| %>
+
+  <div class="mb-3">
+    <%= form.label :name %>
+    <%= form.text_field :name, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :destination %>
+    <%= form.text_field :destination, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :start_date %>
+    <%= form.date_field :start_date, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :end_date %>
+    <%= form.date_field :end_date, class: "form-control" %>
+  </div>
+
+  <%= form.submit "Create Trip", class: "btn btn-primary" %>
+
+<% end %>

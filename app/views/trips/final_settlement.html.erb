@@ -1,0 +1,320 @@
+<div class="container mt-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2>🏁 Final Settlement</h2>
+      <h5 class="text-muted"><%= @trip.name %></h5>
+    </div>
+
+    <span class="badge bg-danger fs-6">
+      <%= @trip.status.capitalize %>
+    </span>
+  </div>
+
+
+  <!-- Trip Summary -->
+
+  <div class="card shadow mb-4">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Trip Summary</h5>
+    </div>
+
+    <div class="card-body">
+
+      <div class="row">
+
+        <div class="col-md-4">
+          <strong>Destination</strong><br>
+          <%= @trip.destination %>
+        </div>
+
+        <div class="col-md-4">
+          <strong>Start Date</strong><br>
+          <%= @trip.start_date %>
+        </div>
+
+        <div class="col-md-4">
+          <strong>End Date</strong><br>
+          <%= @trip.end_date %>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+
+  <!-- Expense Summary -->
+
+  <div class="card shadow mb-4">
+
+    <div class="card-header bg-success text-white">
+      <h5 class="mb-0">Expense Summary</h5>
+    </div>
+
+    <div class="card-body">
+
+      <table class="table table-bordered">
+
+        <thead>
+
+          <tr>
+            <th>Category</th>
+            <th>Total</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+        <% @trip.expenses.group(:category).sum(:amount).each do |category, amount| %>
+
+          <tr>
+
+            <td><%= category %></td>
+
+            <td>₹<%= amount %></td>
+
+          </tr>
+
+        <% end %>
+
+        </tbody>
+
+      </table>
+
+      <h4 class="text-end">
+
+        Total Expense :
+
+        ₹<%= @trip.expenses.sum(:amount) %>
+
+      </h4>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- Member Contribution -->
+
+  <div class="card shadow mb-4">
+
+    <div class="card-header bg-info text-white">
+
+      <h5 class="mb-0">
+
+        Member Contributions
+
+      </h5>
+
+    </div>
+
+    <div class="card-body">
+
+      <table class="table">
+
+        <thead>
+
+          <tr>
+
+            <th>Member</th>
+
+            <th>Paid</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+        <% @trip.users.each do |member| %>
+
+          <tr>
+
+            <td>
+
+              <%= member.name %>
+
+            </td>
+
+            <td>
+
+              ₹<%= @trip.expenses.where(payer: member).sum(:amount) %>
+
+            </td>
+
+          </tr>
+
+        <% end %>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+  <div class="mt-4 d-flex gap-2">
+  <%= link_to "⬅ Back to Trip",
+      trip_path(@trip),
+      class: "btn btn-secondary" %>
+
+  <%= link_to "📄 Download Final Settlement PDF",
+      final_settlement_pdf_trip_path(@trip),
+      class: "btn btn-danger" %>
+</div>
+
+
+
+  <!-- Final Settlement -->
+
+  <div class="card shadow mb-4">
+
+    <div class="card-header bg-dark text-white">
+
+      <h5 class="mb-0">
+
+        Final Settlements
+
+      </h5>
+
+    </div>
+
+    <div class="card-body">
+
+      <table class="table table-hover">
+
+        <thead>
+
+          <tr>
+
+            <th>From</th>
+
+            <th>To</th>
+
+            <th>Amount</th>
+
+            <th>Status</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+        <% @trip.settlements.each do |settlement| %>
+
+          <tr>
+
+            <td><%= settlement.payer.name %></td>
+            <td><%= settlement.receiver.name %></td>
+            <td>₹<%= settlement.amount %></td>
+
+            <td>
+                <% if settlement.completed? %>
+                    <span class="badge bg-success">Completed</span>
+                <% else %>
+                    <span class="badge bg-warning">Pending</span>
+                <% end %>
+            </td>
+          </tr>
+
+        <% end %>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- Summary -->
+
+  <div class="row">
+
+    <div class="col-md-4">
+
+      <div class="card border-primary shadow">
+
+        <div class="card-body text-center">
+
+          <h5>Total Expense</h5>
+
+          <h2>
+
+            ₹<%= @trip.expenses.sum(:amount) %>
+
+          </h2>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+      <div class="card border-warning shadow">
+
+        <div class="card-body text-center">
+
+          <h5>Pending</h5>
+
+          <h2>
+
+            <%= @trip.settlements.pending.count %>
+
+          </h2>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+      <div class="card border-success shadow">
+
+        <div class="card-body text-center">
+
+          <h5>Completed</h5>
+
+          <h2>
+
+            <%= @trip.settlements.completed.count %>
+
+          </h2>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- Buttons -->
+
+  <div class="text-center mt-5">
+
+  <%= link_to "⬅ Back to Trip",
+      trip_path(@trip),
+      class: "btn btn-secondary" %>
+
+  <%= link_to "📄 Download Final Settlement PDF",
+      final_settlement_pdf_trip_path(@trip),
+      class: "btn btn-danger" %>
+
+</div>
+
+</div>

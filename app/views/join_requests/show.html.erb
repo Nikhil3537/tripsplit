@@ -1,0 +1,50 @@
+<h1><%= @trip.name %></h1>
+
+<p>
+  <strong>Destination:</strong>
+  <%= @trip.destination %>
+</p>
+
+<p>
+  <strong>Owner:</strong>
+  <%= @trip.creator.name %>
+</p>
+
+<% if @trip.users.include?(current_user) %>
+
+  <div class="alert alert-success">
+    You are already a member of this trip.
+  </div>
+
+<% else %>
+
+  <% request = @trip.join_requests.find_by(user: current_user) %>
+
+  <% if request.nil? %>
+
+    <%= button_to "Request to Join",
+          trip_join_requests_path(@trip),
+          method: :post,
+          class: "btn btn-primary" %>
+
+  <% elsif request.pending? %>
+
+    <div class="alert alert-warning">
+      Request Pending
+    </div>
+
+  <% elsif request.accepted? %>
+
+    <div class="alert alert-success">
+      Your request has been accepted.
+    </div>
+
+  <% elsif request.rejected? %>
+
+    <div class="alert alert-danger">
+      Your request was rejected.
+    </div>
+
+  <% end %>
+
+<% end %>

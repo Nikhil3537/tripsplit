@@ -1,0 +1,42 @@
+<h2>Settlements</h2>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Payer</th>
+      <th>Receiver</th>
+      <th>Amount</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @settlements.each do |settlement| %>
+      <tr>
+        <td><%= settlement.payer.name %></td>
+        <td><%= settlement.receiver.name %></td>
+        <td>₹<%= settlement.amount %></td>
+
+        <td>
+          <% if settlement.completed? %>
+            <span class="badge bg-success">Completed</span>
+          <% else %>
+            <span class="badge bg-warning text-dark">Pending</span>
+          <% end %>
+        </td>
+
+        <td>
+          <% unless settlement.completed? %>
+            <%= button_to "Mark as Paid",
+                  trip_settlement_path(@trip, settlement),
+                  method: :patch,
+                  class: "btn btn-success btn-sm" %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "Back", trip_path(@trip), class: "btn btn-secondary" %>

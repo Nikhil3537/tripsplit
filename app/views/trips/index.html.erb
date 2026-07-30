@@ -1,0 +1,42 @@
+<p><strong>Logged in User:</strong> <%= current_user.id %> - <%= current_user.name %></p>
+<h2>My Trips</h2>
+
+<%= link_to "New Trip", new_trip_path, class: "btn btn-primary mb-3" %>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Destination</th>
+      <th>Dates</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @trips.each do |trip| %>
+      <tr>
+        <td><%= trip.name %></td>
+        <td><%= trip.destination %></td>
+        <td>
+          <%= trip.start_date %> -
+          <%= trip.end_date %>
+        </td>
+        <td>
+          <%= link_to "Show", trip_path(trip), class: "btn btn-sm btn-info" %>
+
+          <% if trip.creator == current_user %>
+            <%= link_to "Edit", edit_trip_path(trip), class: "btn btn-sm btn-warning" %>
+
+            <%= link_to "Delete", trip_path(trip),
+                data: {
+                  turbo_method: :delete,
+                  turbo_confirm: "Are you sure?"
+                },
+                class: "btn btn-sm btn-danger" %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

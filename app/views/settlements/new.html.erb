@@ -1,0 +1,22 @@
+<h2>New Settlement</h2>
+
+<%= form_with model: [@trip, @settlement] do |f| %>
+
+  <div class="mb-3">
+    <%= f.label :payer_id %>
+    <%= f.collection_select :payer_id, @trip.users, :id, :name %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :receiver_id %>
+    <%= f.collection_select :receiver_id, @trip.users, :id, :name %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :amount %>
+    <%= f.number_field :amount, step: 0.01 %>
+  </div>
+
+  <%= f.submit "Create Settlement" %>
+
+<% end %>

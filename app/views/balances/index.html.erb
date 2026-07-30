@@ -1,0 +1,37 @@
+<h2>Trip Balances</h2>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Member</th>
+      <th>Paid</th>
+      <th>Share</th>
+      <th>Balance</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @balances.each do |user, data| %>
+      <tr>
+        <td><%= user.name %></td>
+        <td>Rs.<%= data[:paid] %></td>
+        <td>Rs.<%= data[:share] %></td>
+        <td>
+          <% if data[:balance] > 0 %>
+            <span class="text-success">
+              Should Receive ₹<%= data[:balance] %>
+            </span>
+          <% elsif data[:balance] < 0 %>
+            <span class="text-danger">
+              Needs to Pay ₹<%= data[:balance].abs %>
+            </span>
+          <% else %>
+            Settled
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "Back", trip_path(@trip), class: "btn btn-secondary" %>

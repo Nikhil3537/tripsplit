@@ -1,0 +1,266 @@
+<%= form_with model: [@trip, @expense] do |form| %>
+
+  <% if @expense.errors.any? %>
+
+    <div class="alert alert-danger">
+
+      <h5>Please fix the following errors:</h5>
+
+      <ul>
+
+        <% @expense.errors.full_messages.each do |message| %>
+
+          <li><%= message %></li>
+
+        <% end %>
+
+      </ul>
+
+    </div>
+
+  <% end %>
+
+  <div class="card shadow mb-4">
+
+    <div class="card-header bg-primary text-white">
+
+      <h4 class="mb-0">
+        <i class="bi bi-receipt"></i>
+        Expense Details
+      </h4>
+
+    </div>
+
+    <div class="card-body">
+
+      <div class="row">
+
+        <div class="col-md-6 mb-3">
+
+          <%= form.label :title, class: "form-label fw-bold" %>
+
+          <%= form.text_field :title,
+                class: "form-control",
+                placeholder: "Dinner, Hotel, Petrol..." %>
+
+        </div>
+
+        <div class="col-md-6 mb-3">
+
+          <%= form.label :amount, class: "form-label fw-bold" %>
+
+          <%= form.number_field :amount,
+                step: 0.01,
+                min: 0,
+                id: "expense_amount",
+                class: "form-control",
+                placeholder: "0.00" %>
+
+        </div>
+
+      </div>
+
+      <div class="row">
+
+        <div class="col-md-6 mb-3">
+
+          <%= form.label :category, class: "form-label fw-bold" %>
+
+          <%= form.select :category,
+
+                [
+                  "🍴 Food",
+                  "🏨 Hotel",
+                  "⛽ Fuel",
+                  "🚕 Transport",
+                  "🛍 Shopping",
+                  "🎉 Entertainment",
+                  "📦 Other"
+                ],
+
+                {},
+
+                class: "form-select" %>
+
+        </div>
+
+        <div class="col-md-6 mb-3">
+
+          <%= form.label :spent_on, class: "form-label fw-bold" %>
+
+          <%= form.date_field :spent_on,
+                class: "form-control" %>
+
+        </div>
+
+      </div>
+
+      <div class="mb-3">
+
+        <%= form.label :description, class: "form-label fw-bold" %>
+
+        <%= form.text_area :description,
+
+              rows: 4,
+
+              class: "form-control",
+
+              placeholder: "Optional description..." %>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Split Members -->
+
+  <div class="card shadow mb-4">
+
+    <div class="card-header bg-success text-white">
+
+      <h4 class="mb-0">
+
+        <i class="bi bi-people-fill"></i>
+
+        Split Between
+
+      </h4>
+
+    </div>
+
+    <div class="card-body">
+
+      <div class="row">
+
+        <% @trip.users.each do |user| %>
+
+          <div class="col-md-4 mb-3">
+
+            <label class="card h-100 p-3 member-card">
+
+              <div class="form-check">
+
+                <%= check_box_tag "expense[user_ids][]",
+
+                      user.id,
+
+                      true,
+
+                      id: "user_#{user.id}",
+
+                      class: "form-check-input member-checkbox" %>
+
+                <%= label_tag "user_#{user.id}", nil, class: "form-check-label w-100" do %>
+
+                  <div class="text-center">
+
+                    <i class="bi bi-person-circle display-6 text-primary"></i>
+
+                    <h5 class="mt-2">
+
+                      <%= user.name %>
+
+                    </h5>
+
+                  </div>
+
+                <% end %>
+
+              </div>
+
+            </label>
+
+          </div>
+
+        <% end %>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Split Preview -->
+
+  <div class="card shadow mb-4">
+
+    <div class="card-header bg-warning">
+
+      <h5 class="mb-0">
+
+        💵 Split Preview
+
+      </h5>
+
+    </div>
+
+    <div class="card-body">
+
+      <h3>
+
+        Each selected member pays
+
+      </h3>
+
+      <h1 class="text-success">
+
+        ₹<span id="split_amount">0.00</span>
+
+      </h1>
+
+    </div>
+
+  </div>
+
+  <div class="text-end">
+
+    <%= link_to "Cancel",
+
+          trip_expenses_path(@trip),
+
+          class: "btn btn-secondary" %>
+
+    <%= form.submit "Save Expense",
+
+          class: "btn btn-primary ms-2" %>
+
+  </div>
+
+<% end %>
+
+<script>
+document.addEventListener("turbo:load", function () {
+
+  function updateSplit() {
+
+    const amount =
+      parseFloat(document.getElementById("expense_amount").value) || 0;
+
+    const selected =
+      document.querySelectorAll(".member-checkbox:checked").length;
+
+    const split =
+      selected > 0 ? (amount / selected).toFixed(2) : "0.00";
+
+    document.getElementById("split_amount").textContent = split;
+  }
+
+  const amountField = document.getElementById("expense_amount");
+
+  if (amountField) {
+
+    amountField.addEventListener("input", updateSplit);
+
+    document.querySelectorAll(".member-checkbox").forEach(function(box){
+
+      box.addEventListener("change", updateSplit);
+
+    });
+
+    updateSplit();
+
+  }
+
+});
+</script>

@@ -1,0 +1,67 @@
+.dashboard-card{
+    border:none;
+    border-radius:18px;
+    color:white;
+    transition:0.3s;
+}
+
+.dashboard-card:hover{
+    transform:translateY(-6px);
+}
+
+.bg-blue{
+    background:linear-gradient(45deg,#0d6efd,#4dabf7);
+}
+
+.bg-green{
+    background:linear-gradient(45deg,#198754,#43c463);
+}
+
+.bg-orange{
+    background:linear-gradient(45deg,#fd7e14,#ffb74d);
+}
+
+.bg-red{
+    background:linear-gradient(45deg,#dc3545,#ff6b6b);
+}
+
+.bg-purple{
+    background:linear-gradient(45deg,#6f42c1,#9b59b6);
+}
+
+.bg-teal{
+    background:linear-gradient(45deg,#20c997,#4dd0e1);
+}
+
+.stat-number{
+    font-size:34px;
+    font-weight:bold;
+}
+
+.section-card{
+    border-radius:15px;
+    border:none;
+}
+
+.table tbody tr:hover{
+    background:#f8f9fa;
+}
+
+.member-card{
+    cursor:pointer;
+    transition:.3s;
+    border-radius:15px;
+}
+
+.member-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+}
+
+.member-card input{
+    margin-bottom:12px;
+}
+
+.card-header{
+    font-weight:600;
+}

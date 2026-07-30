@@ -1,0 +1,515 @@
+<div class="container-fluid">
+
+  <!-- Welcome -->
+  <div class="mb-4">
+    <h2 class="fw-bold">
+      Welcome, <%= @user.name %> 👋
+    </h2>
+    <p class="text-muted">
+      Manage your trips and expenses easily.
+    </p>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="row g-4">
+
+    <div class="col-md-4 col-lg-2">
+      <div class="card dashboard-card bg-blue shadow">
+        <div class="card-body text-center">
+          <i class="bi bi-airplane fs-1"></i>
+          <h6 class="mt-2">Total Trips</h6>
+          <div class="stat-number"><%= @total_trips %></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-lg-2">
+      <div class="card dashboard-card bg-green shadow">
+        <div class="card-body text-center">
+          <i class="bi bi-check-circle fs-1"></i>
+          <h6 class="mt-2">Active Trips</h6>
+          <div class="stat-number"><%= @active_trips %></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-lg-2">
+      <div class="card dashboard-card bg-orange shadow">
+        <div class="card-body text-center">
+          <i class="bi bi-flag fs-1"></i>
+          <h6 class="mt-2">Completed</h6>
+          <div class="stat-number"><%= @completed_trips %></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-lg-2">
+      <div class="card dashboard-card bg-purple shadow">
+        <div class="card-body text-center">
+          <i class="bi bi-people fs-1"></i>
+          <h6 class="mt-2">Members</h6>
+          <div class="stat-number"><%= @total_members %></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-lg-2">
+      <div class="card dashboard-card bg-red shadow">
+        <div class="card-body text-center">
+          <i class="bi bi-cash-stack fs-1"></i>
+          <h6 class="mt-2">Expenses</h6>
+          <div class="stat-number">₹<%= @total_expenses %></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-lg-2">
+      <div class="card dashboard-card bg-teal shadow">
+        <div class="card-body text-center">
+          <i class="bi bi-person-check fs-1"></i>
+          <h6 class="mt-2">Joined Trips</h6>
+          <div class="stat-number"><%= @joined_trips %></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row mt-4">
+
+  <div class="col-md-4">
+    <div class="card border-success shadow">
+      <div class="card-body text-center">
+        <h5>Total Paid</h5>
+        <h2 class="text-success">
+          ₹<%= @total_paid %>
+        </h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card border-danger shadow">
+      <div class="card-body text-center">
+        <h5>You Owe</h5>
+        <h2 class="text-danger">
+          ₹<%= @you_owe.round(2) %>
+        </h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card border-primary shadow">
+      <div class="card-body text-center">
+        <h5>You Receive</h5>
+        <h2 class="text-primary">
+          ₹<%= @you_receive.round(2) %>
+        </h2>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="card shadow mt-5">
+
+  <div class="card-header bg-dark text-white">
+    <h4 class="mb-0">💳 Settlement Analytics</h4>
+  </div>
+
+  <div class="card-body">
+
+    <div class="row">
+
+      <div class="col-md-3">
+        <div class="card border-warning text-center">
+          <div class="card-body">
+            <h6>Pending</h6>
+            <h3><%= @pending_count %></h3>
+            <p>₹<%= @pending_amount %></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="card border-success text-center">
+          <div class="card-body">
+            <h6>Completed</h6>
+            <h3><%= @completed_count %></h3>
+            <p>₹<%= @completed_amount %></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="card border-primary text-center">
+          <div class="card-body">
+            <h6>Total Amount</h6>
+            <h3>₹<%= @total_settlement_amount %></h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="card border-info text-center">
+          <div class="card-body">
+            <h6>Completion</h6>
+            <h3><%= @settlement_completion %>%</h3>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div class="card shadow mt-5">
+
+  <div class="card-header bg-success text-white">
+
+    <h4 class="mb-0">
+      🥧 Category-wise Spending
+    </h4>
+
+  </div>
+
+  <div class="card-body">
+
+    <table class="table table-hover">
+
+      <thead>
+
+        <tr>
+
+          <th>Category</th>
+
+          <th>Total</th>
+
+          <th>Percentage</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <% @category_expenses.each do |category, amount| %>
+
+          <% percentage =
+              @category_total.zero? ? 0 :
+              ((amount / @category_total.to_f) * 100).round(1) %>
+
+          <tr>
+
+            <td>
+              <%= category %>
+            </td>
+
+            <td>
+              ₹<%= amount %>
+            </td>
+
+            <td>
+              <span class="badge bg-primary">
+                <%= percentage %>%
+              </span>
+            </td>
+
+          </tr>
+
+        <% end %>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+  <!-- Balance Summary -->
+  <div class="row mt-5">
+
+    <div class="col-md-6">
+      <div class="card shadow section-card border-success">
+        <div class="card-body">
+          <h5 class="text-success">
+            <i class="bi bi-arrow-down-circle-fill"></i>
+            You Should Receive
+          </h5>
+
+          <h2 class="fw-bold text-success">
+            ₹<%= @you_receive.round(2) %>
+          </h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card shadow section-card border-danger">
+        <div class="card-body">
+          <h5 class="text-danger">
+            <i class="bi bi-arrow-up-circle-fill"></i>
+            You Owe
+          </h5>
+
+          <h2 class="fw-bold text-danger">
+            ₹<%= @you_owe.round(2) %>
+          </h2>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row mt-5">
+
+  <div class="col-md-4">
+    <div class="card border-success shadow">
+      <div class="card-body text-center">
+        <h5>Highest Contributor</h5>
+
+        <% if @highest_contributor %>
+          <h4><%= @highest_contributor[:user].name %></h4>
+          <h3 class="text-success">
+            ₹<%= @highest_contributor[:amount] %>
+          </h3>
+        <% end %>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card border-danger shadow">
+      <div class="card-body text-center">
+        <h5>Lowest Contributor</h5>
+
+        <% if @lowest_contributor %>
+          <h4><%= @lowest_contributor[:user].name %></h4>
+          <h3 class="text-danger">
+            ₹<%= @lowest_contributor[:amount] %>
+          </h3>
+        <% end %>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card border-primary shadow">
+      <div class="card-body text-center">
+        <h5>Total Contribution</h5>
+
+        <h2 class="text-primary">
+          ₹<%= @total_contribution %>
+        </h2>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+  <!-- Recent Trips -->
+  <div class="card shadow section-card mt-5">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">
+        <i class="bi bi-map"></i>
+        Recent Trips
+      </h5>
+    </div>
+
+    <div class="card-body">
+
+      <% if @recent_trips.any? %>
+
+        <table class="table table-hover">
+
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Destination</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <% @recent_trips.each do |trip| %>
+
+              <tr>
+
+                <td><%= trip.name %></td>
+
+                <td><%= trip.destination %></td>
+
+                <td>
+                  <%= link_to "Open",
+                      trip_path(trip),
+                      class: "btn btn-sm btn-primary" %>
+                </td>
+
+              </tr>
+
+            <% end %>
+
+          </tbody>
+
+        </table>
+
+      <% else %>
+
+        <p class="text-muted">No trips available.</p>
+
+      <% end %>
+
+    </div>
+  </div>
+
+  <!-- Upcoming Trips -->
+  <div class="card shadow section-card mt-4">
+    <div class="card-header bg-success text-white">
+      <h5 class="mb-0">
+        <i class="bi bi-calendar-event"></i>
+        Upcoming Trips
+      </h5>
+    </div>
+
+    <div class="card-body">
+
+      <% if @upcoming_trips.any? %>
+
+        <ul class="list-group">
+
+          <% @upcoming_trips.each do |trip| %>
+
+            <li class="list-group-item d-flex justify-content-between">
+
+              <strong><%= trip.name %></strong>
+
+              <span>
+                <%= trip.start_date.strftime("%d %b %Y") %>
+              </span>
+
+            </li>
+
+          <% end %>
+
+        </ul>
+
+      <% else %>
+
+        <p class="text-muted">No upcoming trips.</p>
+
+      <% end %>
+
+    </div>
+  </div>
+
+  <!-- Recent Expenses -->
+  <div class="card shadow section-card mt-4">
+
+    <div class="card-header bg-warning">
+      <h5 class="mb-0">
+        <i class="bi bi-wallet2"></i>
+        Recent Expenses
+      </h5>
+    </div>
+
+    <div class="card-body">
+
+      <% if @recent_expenses.any? %>
+
+        <table class="table table-hover">
+
+          <thead>
+
+            <tr>
+
+              <th>Title</th>
+
+              <th>Trip</th>
+
+              <th>Amount</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            <% @recent_expenses.each do |expense| %>
+
+              <tr>
+
+                <td><%= expense.title %></td>
+
+                <td><%= expense.trip.name %></td>
+
+                <td class="fw-bold text-primary">
+                  ₹<%= expense.amount %>
+                </td>
+
+              </tr>
+
+            <% end %>
+
+          </tbody>
+
+        </table>
+
+      <% else %>
+
+        <p class="text-muted">No expenses added.</p>
+
+      <% end %>
+
+    </div>
+
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="mt-5">
+
+    <h4 class="mb-3">
+      <i class="bi bi-lightning-charge-fill"></i>
+      Quick Actions
+    </h4>
+
+    <div class="d-flex flex-wrap gap-3">
+
+      <%= link_to "➕ New Trip",
+          new_trip_path,
+          class: "btn btn-primary btn-lg" %>
+
+      <% if @recent_trips.any? %>
+
+        <%= link_to "💰 Add Expense",
+            new_trip_expense_path(@recent_trips.first),
+            class: "btn btn-success btn-lg" %>
+
+        <%= link_to "📊 View Balances",
+            trip_balances_path(@recent_trips.first),
+            class: "btn btn-warning btn-lg" %>
+
+        <%= link_to "💳 Settlements",
+            trip_settlements_path(@recent_trips.first),
+            class: "btn btn-danger btn-lg" %>
+
+      <% end %>
+
+      <%= link_to "🧳 All Trips",
+          trips_path,
+          class: "btn btn-dark btn-lg" %>
+
+    </div>
+
+
+  </div>
+
+</div>

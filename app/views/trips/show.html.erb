@@ -1,0 +1,227 @@
+<h2><%= @trip.name %></h2>
+
+<p>
+  <strong>Destination:</strong>
+  <%= @trip.destination %>
+</p>
+
+<p>
+  <strong>Start Date:</strong>
+  <%= @trip.start_date %>
+</p>
+
+<p>
+  <strong>End Date:</strong>
+  <%= @trip.end_date %>
+</p>
+
+<hr>
+
+<h3>Members</h3>
+
+<ul class="list-group mb-4">
+  <% @trip.memberships.includes(:user).each do |membership| %>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <div>
+        <strong><%= membership.user.name %></strong>
+        (<%= membership.role.capitalize %>)
+      </div>
+
+      <% if @trip.creator == current_user && membership.role != "owner" %>
+        <%= button_to "Remove",
+              trip_membership_path(@trip, membership),
+              method: :delete,
+              data: { turbo_confirm: "Remove this member?" },
+              class: "btn btn-danger btn-sm" %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>
+
+<% if @trip.creator == current_user %>
+
+<hr>
+
+<h3>Invite Member</h3>
+
+<%= form_with url: invite_trip_join_requests_path(@trip),
+              method: :post,
+              local: true do %>
+
+  <div class="input-group mb-3">
+    <%= email_field_tag :email,
+          nil,
+          placeholder: "Enter email address",
+          class: "form-control",
+          required: true %>
+
+    <%= submit_tag "Send Invitation",
+          class: "btn btn-primary" %>
+  </div>
+
+<% end %>
+
+<%= link_to "📱 Share on WhatsApp",
+    "https://wa.me/?text=#{CGI.escape("Hi! You've been invited to join my TripSplit trip.\n\nTrip: #{@trip.name}\nDestination: #{@trip.destination}\n\nJoin here: #{join_trip_url(token: @trip.join_token)}")}",
+    target: "_blank",
+    class: "btn btn-success mb-4" %>
+
+<hr>
+
+<h3>Pending Join Requests</h3>
+
+<% pending_requests = @trip.join_requests.where(status: :pending).includes(:user) %>
+
+<% if pending_requests.any? %>
+
+  <% pending_requests.each do |request| %>
+
+    <div class="card mb-3">
+      <div class="card-body">
+
+        <h5><%= request.user.name %></h5>
+
+        <p>
+          <strong>Email:</strong>
+          <%= request.user.email %>
+        </p>
+
+        <div class="d-flex gap-2">
+
+          <%= button_to "✅ Accept",
+                accept_join_request_path(request),
+                method: :patch,
+                class: "btn btn-success" %>
+
+          <%= button_to "❌ Reject",
+                reject_join_request_path(request),
+                method: :patch,
+                class: "btn btn-danger" %>
+
+        </div>
+
+      </div>
+    </div>
+
+  <% end %>
+
+<% else %>
+
+  <div class="alert alert-info">
+    No pending join requests.
+  </div>
+
+<% end %>
+
+<% end %>
+
+<hr>
+
+<h3>Expenses</h3>
+
+<%= link_to "Add Expense",
+      new_trip_expense_path(@trip),
+      class: "btn btn-success mb-3" %>
+
+<% if @trip.expenses.any? %>
+
+  <% @trip.expenses.each do |expense| %>
+
+    <div class="card mb-3">
+
+      <div class="card-header">
+        <strong><%= expense.title %></strong>
+      </div>
+
+      <div class="card-body">
+
+        <p>
+          <strong>Amount:</strong>
+          ₹<%= expense.amount %>
+        </p>
+
+        <p>
+          <strong>Paid By:</strong>
+          <%= expense.payer.name %>
+        </p>
+
+        <p>
+          <strong>Date:</strong>
+          <%= expense.spent_on %>
+        </p>
+
+        <hr>
+
+        <h6>Split Between</h6>
+
+        <% if expense.expense_splits.any? %>
+
+          <table class="table table-bordered table-sm">
+            <thead>
+              <tr>
+                <th>Member</th>
+                <th>Share</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              <% expense.expense_splits.each do |split| %>
+
+                <tr>
+                  <td><%= split.user.name %></td>
+                  <td>₹<%= split.amount %></td>
+                </tr>
+
+              <% end %>
+
+            </tbody>
+          </table>
+
+        <% else %>
+
+          <div class="alert alert-warning">
+            This expense has not been split yet.
+          </div>
+
+        <% end %>
+
+      </div>
+
+    </div>
+
+  <% end %>
+
+<% else %>
+
+  <div class="alert alert-info">
+    No expenses added yet.
+  </div>
+
+<% end %>
+
+<hr>
+
+<div class="d-flex flex-wrap gap-2 mt-4">
+
+  <%= link_to "💰 View Balances",
+      trip_balances_path(@trip),
+      class: "btn btn-primary" %>
+
+  <%= link_to "🤝 Settlements",
+      trip_settlements_path(@trip),
+      class: "btn btn-warning" %>
+
+  <%= button_to "🏁 End Trip",
+      end_trip_trip_path(@trip),
+      method: :patch,
+      class: "btn btn-danger",
+      data: {
+        turbo_confirm: "Are you sure you want to end this trip?"
+      } %>
+
+  <%= link_to "⬅ Back",
+      trips_path,
+      class: "btn btn-secondary" %>
+
+</div>
