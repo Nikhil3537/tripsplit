@@ -59,6 +59,9 @@ Rails.application.configure do
 
   # Set host to be used by links generated in mailer templates.
   #config.action_mailer.default_url_options = { host: "example.com" }
+  puts "SMTP_USERNAME=#{ENV['SMTP_USERNAME'].inspect}"
+  puts "SMTP_PASSWORD=#{ENV['SMTP_PASSWORD'].present?}"
+  
   config.action_mailer.default_url_options = {
     host: "tripsplit-4hxi.onrender.com",
     protocol: "https"
