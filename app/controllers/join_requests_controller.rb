@@ -45,15 +45,19 @@ class JoinRequestsController < ApplicationController
 
     @join_request.update!(status: :accepted)
 
+    puts "JoinRequest status: #{@join_request.reload.status}"
+
     redirect_to trip_path(@join_request.trip),
-                notice: "Member added successfully."
+              notice: "Member added successfully."
   end
 
   def reject
     @join_request.update!(status: :rejected)
 
+    puts "JoinRequest status: #{@join_request.reload.status}"
+
     redirect_to trip_path(@join_request.trip),
-                notice: "Request rejected."
+              notice: "Request rejected."
   end
 
   private

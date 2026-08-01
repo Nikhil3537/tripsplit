@@ -87,7 +87,7 @@
 
   <h3>Pending Join Requests</h3>
 
-  <% pending_requests = @trip.join_requests.pending.includes(:user) %>
+  <% pending_requests = @trip.join_requests.where(status: :pending).includes(:user) %>
 
   <% if pending_requests.any? %>
 
