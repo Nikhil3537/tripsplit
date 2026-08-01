@@ -8,6 +8,9 @@ class SessionsController < ApplicationController
     if user&.authenticate(params[:password])
       session[:user_id] = user.id
 
+      puts "join_token param = #{params[:join_token].inspect}"
+      puts "join_token session = #{session[:join_token].inspect}"
+
       if params[:join_token].present?
         redirect_to join_trip_path(token: params[:join_token]), notice: "Logged in successfully."
       elsif session[:join_token].present?
