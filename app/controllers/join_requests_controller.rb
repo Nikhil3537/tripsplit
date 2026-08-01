@@ -43,7 +43,7 @@ class JoinRequestsController < ApplicationController
       membership.role = "member"
     end
 
-    @join_request.update!(status: :accepted)
+    @join_request.update_column(:status, JoinRequest.statuses[:accepted])
 
     puts "JoinRequest status: #{@join_request.reload.status}"
 
@@ -52,7 +52,7 @@ class JoinRequestsController < ApplicationController
   end
 
   def reject
-    @join_request.update!(status: :rejected)
+    @join_request.update_column(:status, JoinRequest.statuses[:rejected])
 
     puts "JoinRequest status: #{@join_request.reload.status}"
 

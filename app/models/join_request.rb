@@ -14,7 +14,7 @@ class JoinRequest < ApplicationRecord
               message: "already requested to join this trip"
             }
 
-  validate :user_not_already_member
+  validate :user_not_already_member, on: :create
 
   private
 
