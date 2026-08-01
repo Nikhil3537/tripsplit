@@ -8,9 +8,11 @@ class SessionsController < ApplicationController
     if user&.authenticate(params[:password])
       session[:user_id] = user.id
 
-      if session[:join_token].present?
+      if params[:join_token].present?
+        redirect_to join_trip_path(token: params[:join_token]), notice: "Logged in successfully."
+      elsif session[:join_token].present?
         token = session.delete(:join_token)
-        redirect_to join_trip_path(token), notice: "Logged in successfully."
+        redirect_to join_trip_path(token: token), notice: "Logged in successfully."
       else
         redirect_to trips_path, notice: "Logged in successfully."
       end
