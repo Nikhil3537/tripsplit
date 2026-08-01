@@ -1,12 +1,4 @@
-<p>Current User: <%= current_user.email %></p>
 
-<p>Trip Members:</p>
-
-<ul>
-  <% @trip.users.each do |user| %>
-    <li><%= user.email %></li>
-  <% end %>
-</ul>
 
 <h2><%= @trip.name %></h2>
 

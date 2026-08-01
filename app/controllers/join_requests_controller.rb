@@ -1,6 +1,6 @@
 class JoinRequestsController < ApplicationController
   before_action :require_login, except: [:show]
-  before_action :set_trip, only: [:create, :invite]
+  before_action :set_trip, only: [:create]
   before_action :set_join_request, only: [:accept, :reject]
   before_action :authorize_owner!, only: [:accept, :reject]
 
@@ -9,36 +9,31 @@ class JoinRequestsController < ApplicationController
 
     unless logged_in?
       session[:join_token] = params[:token]
-      redirect_to new_session_path and return
+      redirect_to new_session_path
+      return
     end
 
     @join_request = @trip.join_requests.find_by(user: current_user)
   end
 
-  def invite
-    redirect_to @trip,
-              notice: "Share the invite link with your friends."
-  end
   def create
-    @join_request = @trip.join_requests.find_or_initialize_by(user: current_user)
-
     if @trip.users.include?(current_user)
       redirect_to join_trip_path(token: @trip.join_token),
-                alert: "You are already a member of this trip."
+                  alert: "You are already a member of this trip."
       return
     end
 
+    @join_request = @trip.join_requests.find_or_initialize_by(user: current_user)
     @join_request.status = :pending
 
     if @join_request.save
       redirect_to join_trip_path(token: @trip.join_token),
-                notice: "Join request sent successfully."
+                  notice: "Join request sent successfully."
     else
       redirect_to join_trip_path(token: @trip.join_token),
-                alert: @join_request.errors.full_messages.to_sentence
+                  alert: @join_request.errors.full_messages.to_sentence
     end
   end
-
 
   def accept
     Membership.find_or_create_by!(
@@ -50,18 +45,17 @@ class JoinRequestsController < ApplicationController
 
     @join_request.update!(status: :accepted)
 
-    redirect_to @join_request.trip,
-              notice: "Member added successfully."
+    redirect_to trip_path(@join_request.trip),
+                notice: "Member added successfully."
   end
 
   def reject
     @join_request.update!(status: :rejected)
 
-    redirect_to @join_request.trip,
+    redirect_to trip_path(@join_request.trip),
                 notice: "Request rejected."
   end
 
-  
   private
 
   def set_trip

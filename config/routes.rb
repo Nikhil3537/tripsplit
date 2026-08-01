@@ -14,20 +14,19 @@ Rails.application.routes.draw do
     resources :expenses
     resources :memberships, only: [:create, :destroy]
 
-    resources :join_requests, only: [:create] do
-      collection do
-        post :invite
-      end
-    end
+    # Join Request
+    resources :join_requests, only: [:create]
 
     resources :settlements, only: [:index, :update]
     resources :balances, only: [:index]
   end
 
+  # Invite Link
   get "/join/:token",
       to: "join_requests#show",
       as: :join_trip
 
+  # Owner Actions
   patch "/join_requests/:id/accept",
         to: "join_requests#accept",
         as: :accept_join_request
