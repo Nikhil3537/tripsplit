@@ -13,4 +13,14 @@ class JoinRequest < ApplicationRecord
               scope: :trip_id,
               message: "already requested to join this trip"
             }
+
+  validate :user_not_already_member
+
+  private
+
+  def user_not_already_member
+    if trip.users.include?(user)
+      errors.add(:base, "You are already a member of this trip.")
+    end
+  end
 end

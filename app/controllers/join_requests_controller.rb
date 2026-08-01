@@ -14,12 +14,17 @@ class JoinRequestsController < ApplicationController
 
     @join_request = @trip.join_requests.find_by(user: current_user)
   end
+
+  def invite
+    redirect_to @trip,
+              notice: "Share the invite link with your friends."
+  end
   def create
     @join_request = @trip.join_requests.find_or_initialize_by(user: current_user)
 
-    if @join_request.accepted?
+    if @trip.users.include?(current_user)
       redirect_to join_trip_path(token: @trip.join_token),
-                notice: "You are already a member of this trip."
+                alert: "You are already a member of this trip."
       return
     end
 
@@ -27,27 +32,13 @@ class JoinRequestsController < ApplicationController
 
     if @join_request.save
       redirect_to join_trip_path(token: @trip.join_token),
-                notice: "Your request has been sent to the trip owner."
+                notice: "Join request sent successfully."
     else
       redirect_to join_trip_path(token: @trip.join_token),
                 alert: @join_request.errors.full_messages.to_sentence
     end
   end
 
-  def invite
-    email = params[:email]
-
-    if email.blank?
-      redirect_to @trip,
-                alert: "Please enter an email address."
-      return
-    end
-
-    InvitationMailer.invite(email, @trip).deliver_now
-
-    redirect_to @trip,
-              notice: "Invitation email sent successfully to #{email}."
-  end
 
   def accept
     Membership.find_or_create_by!(
@@ -60,7 +51,7 @@ class JoinRequestsController < ApplicationController
     @join_request.update!(status: :accepted)
 
     redirect_to @join_request.trip,
-                notice: "Request accepted successfully."
+              notice: "Member added successfully."
   end
 
   def reject

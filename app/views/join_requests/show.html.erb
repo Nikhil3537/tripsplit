@@ -1,4 +1,4 @@
-<h1><%= @trip.name %></h1>
+<h2><%= @trip.name %></h2>
 
 <p>
   <strong>Destination:</strong>
@@ -30,7 +30,7 @@
   <% elsif request.pending? %>
 
     <div class="alert alert-warning">
-      Request Pending
+      Your request is pending approval.
     </div>
 
   <% elsif request.accepted? %>
