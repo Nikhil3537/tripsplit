@@ -5,15 +5,11 @@ default: &default
 
 development:
   <<: *default
-  database: tripsplit_development
-  username: postgres
-  password:
-  host: localhost
+  url: <%= ENV["DATABASE_URL"] %>
 
 test:
   <<: *default
-  database: tripsplit_test
-  username: postgres
+  url: <%= ENV["DATABASE_URL"] %>
   password:
   host: localhost
 

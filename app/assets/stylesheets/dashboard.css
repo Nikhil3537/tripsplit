@@ -1,67 +1,129 @@
-.dashboard-card{
-    border:none;
-    border-radius:18px;
-    color:white;
-    transition:0.3s;
+.app-shell {
+  max-width: 1200px;
 }
 
-.dashboard-card:hover{
-    transform:translateY(-6px);
+.app-toolbar {
+  background: #ffffff;
+  padding: 1.5rem 1.5rem 1.25rem;
+  border-radius: 28px;
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.08);
 }
 
-.bg-blue{
-    background:linear-gradient(45deg,#0d6efd,#4dabf7);
+.app-badge {
+  min-width: 110px;
 }
 
-.bg-green{
-    background:linear-gradient(45deg,#198754,#43c463);
+.app-avatar {
+  width: 54px;
+  height: 54px;
+  font-size: 1.25rem;
+  font-weight: 700;
 }
 
-.bg-orange{
-    background:linear-gradient(45deg,#fd7e14,#ffb74d);
+.app-hero {
+  background: linear-gradient(135deg, #6d28d9 0%, #2563eb 100%);
+  color: #fff;
 }
 
-.bg-red{
-    background:linear-gradient(45deg,#dc3545,#ff6b6b);
+.app-hero-left {
+  min-height: 320px;
 }
 
-.bg-purple{
-    background:linear-gradient(45deg,#6f42c1,#9b59b6);
+.app-hero-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, #ffffff 100%);
 }
 
-.bg-teal{
-    background:linear-gradient(45deg,#20c997,#4dd0e1);
+.app-card, .app-section, .app-action-card {
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.06);
 }
 
-.stat-number{
-    font-size:34px;
-    font-weight:bold;
+.app-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.section-card{
-    border-radius:15px;
-    border:none;
+.app-card:hover, .app-action-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 24px 50px rgba(15, 23, 42, 0.08);
 }
 
-.table tbody tr:hover{
-    background:#f8f9fa;
+.app-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  font-size: 1.1rem;
 }
 
-.member-card{
-    cursor:pointer;
-    transition:.3s;
-    border-radius:15px;
+.bg-blue { background: #3b82f6 !important; }
+.bg-purple { background: #8b5cf6 !important; }
+.bg-teal { background: #14b8a6 !important; }
+
+.app-section {
+  background: #f8fafc;
 }
 
-.member-card:hover{
-    transform:translateY(-5px);
-    box-shadow:0 8px 20px rgba(0,0,0,.15);
+.app-section-header {
+  border-color: rgba(15, 23, 42, 0.08);
 }
 
-.member-card input{
-    margin-bottom:12px;
+.app-mini-card {
+  background: #ffffff;
 }
 
-.card-header{
-    font-weight:600;
+.app-progress {
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.app-progress .progress-bar {
+  border-radius: 999px;
+}
+
+.app-table th, .app-table td {
+  border: none;
+  vertical-align: middle;
+}
+
+.app-list-group {
+  background: #f8fafc;
+}
+
+.app-list-item {
+  border: none;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.app-actions {
+  border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.app-action-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.app-action-card i {
+  transition: transform 0.2s ease;
+}
+
+.app-action-card:hover i {
+  transform: translateY(-2px);
+}
+
+.app-toolbar, .app-hero, .app-card, .app-section, .app-action-card {
+  border-radius: 28px;
+}
+
+@media (max-width: 767px) {
+  .app-toolbar {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .app-hero-left,
+  .app-hero-card {
+    min-height: auto;
+  }
 }
